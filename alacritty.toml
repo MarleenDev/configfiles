@@ -1,0 +1,5 @@
+shell = "/usr/bin/bash"
+working_directory = "/home/marleenvos/dev/projects/FORTRobotics"
+
+[window]
+dimensions = { columns = 120, lines = 70 }

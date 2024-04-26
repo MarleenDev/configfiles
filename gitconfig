@@ -1,0 +1,33 @@
+[user]
+	email = <MY_EMAIL>
+	name = Marleen Vos
+[alias]
+  stash-all = stash save --include-untracked
+  glog = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+	staash = stash --all
+	pushfwl = push --force-with-lease
+[core]
+  editor = vim
+[sendemail]
+  envelopesender = auto
+  smtpServer = smtp.gmail.com
+  smtpServerPort = 587
+  smtpEncryption = tls
+  smtpUser = <MY_EMAIL>
+  from = <MY_EMAIL>
+[credential]
+  helper = store
+[safe]
+	directory = /etc
+[merge]
+	tool = meld
+[mergetool "meld"]
+	# Choose one of these 2 lines (not both!) explained below.
+  cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
+  # cmd = meld "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
+[cola]
+	spellcheck = false
+[column]
+	# ui = auto
+[branch]
+	sort = -committerdate

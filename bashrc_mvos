@@ -1,0 +1,135 @@
+#!/bin/bash
+
+# source /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh
+
+export PATH=/usr/local/bin:/opt/homebrew/bin:$PATH:/home/marleenvos/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
+export PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ '
+export LC_ALL="en_US.UTF-8"
+export JAVA_PATH=/usr/lib/jvm/java-19-openjdk-amd64
+export STM32CubeMX_PATH=/home/marleenvos/STM32CubeMX
+
+
+# fortrobotics
+export CONAN_REVISIONS_ENABLED=1
+export PATH=~/.local/bin:/opt/gcc-arm-none-eabi/bin:$PATH
+alias fort='cd /home/marleenvos/dev/projects/FORTRobotics'
+alias fortnsc='cd /home/marleenvos/dev/projects/FORTRobotics/repos/nsc/NSC'
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+export VIMOS='linux'
+
+alias clang-tidy='/opt/homebrew/opt/llvm/bin/clang-tidy'
+alias gaphor='flatpak run org.gaphor.Gaphor'
+alias spatch='sudo docker run --rm -v `pwd`:`pwd` -w `pwd` -u `id -u` philmd/coccinelle:latest --sp-file myscript.cocci --macro-file mymacro.h --in-place'
+
+alias get_idf='. /home/marleenvos/dev/repos/esp/esp-idf/export.sh'
+alias esp='. /home/marleenvos/dev/repos/esp/esp-idf/export.sh'
+alias matter='. /home/marleenvos/dev/repos/esp/esp-matter/export.sh'
+export IDF_CCACHE_ENABLE=1
+export ESP_MATTER_DEVICE_PATH=/home/marleenvos/dev/repos/esp/esp-matter/device_hal/device/esp32c6_devkit_c
+
+alias ll='ls -l'
+alias egrep='egrep --color=auto'
+alias gitdiff='git diff --ignore-submodules'
+alias gitg='git glog $@ | head -n 20 -;'
+alias gitlistfiles='git diff-tree --no-commit-id --name-only -r $1'
+alias gitlisttags='git log --tags --no-walk --date=iso-local --pretty="%C(auto)%h %cd%d %s"'
+alias gitpatchapply='git am -3 --ignore-whitespace --ignore-space-change $1'
+alias gitpatchcreate='git format-patch $1'
+alias gitup='f() { currepo=`git rev-parse --abbrev-ref HEAD`; git checkout $1; git pull --rebase=preserve origin $1; git checkout $currepo; };f'
+alias glg='git glog'
+alias grep='grep --color=auto'
+alias grm='git reset ../../modules/matsdk ../../scripts/python/autobuild.cfg ../CMakeLists.txt ../../.gitignore core/qdeliriumapp.*'
+alias gst='git status --ignore-submodules'
+alias gd='git diff'
+alias vimupdate='cd /home/marleenvos/dev/repos/mvos/vim; git pull origin master ; make ; sudo make install ; vim --version'
+alias nvimupdate='cd /home/marleenvos/dev/repos/mvos/neovim; git pull origin master ; make CMAKE_BUILD_TYPE=RelWithDebInf ; sudo make install ; nvim -V1 -v'
+alias lt='ls -alrt'
+alias maketags="ctags --map-C++=+'(*.ino)' -R ."
+alias dfind='find . -type d'
+alias ffind='find . -type f'
+
+alias sshd_start='sudo systemctl start sshd.service'
+alias sshd_restart='sudo systemctl restart sshd.service'
+alias sshd_stop='sudo systemctl stop sshd.service'
+alias sshd_status='sudo systemctl status sshd.service'
+
+alias dhcpd_start='sudo service isc-dhcp-server start'
+alias dhcpd_restart='sudo service isc-dhcp-server restart'
+alias dhcpd_stop='sudo service isc-dhcp-server stop'
+alias dhcpd_status='sudo service isc-dhcp-server status'
+alias dhcpd_leases='cat /var/lib/dhcp/dhcpd.leases'
+
+if type rg &> /dev/null; then
+  export FZF_DEFAULT_COMMAND='rg --files'
+  export FZF_DEFAULT_OPTS='-m'
+fi
+
+alias dev='cd ~/dev'
+alias rep='cd ~/dev/repos'
+alias proj='cd ~/dev/projects'
+alias poky='cd ~/dev/repos/poky'
+alias doc='cd ~/doc'
+alias cdvim='cd ~/dev/repos/vim'
+
+## fasd
+fasd_cache="$HOME/.fasd-init-bash"
+if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
+  fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
+fi
+source "$fasd_cache"
+unset fasd_cache
+
+alias ble='cd /home/marleenvos/dev/projects/bluetooth_leak/ble-memleak-repro'
+alias blu='cd /home/marleenvos/dev/projects/bluetooth_leak/ble-memleak-repro/buildroot/output/build/bluez5_utils-5.68'
+
+function ff {
+  fdir=`pwd`
+  ftype='f'
+  fwhat=''
+  ffind=`which find`
+
+  if [ $# -eq 1 ]; then
+    fwhat=$1
+  elif [ $# -eq 2 ]; then
+    fdir=$1
+    fwhat=$2
+  elif [ $# -eq 3 ]; then
+    fdir=$1
+    ftype=$2
+    fwhat=$3
+  else
+    echo "usage: $0 [dir] [type] [what]"
+    exit 1
+  fi
+  cmd="find $fdir -type $ftype -exec grep -Hn $fwhat {} \;"
+  eval $cmd
+}
+
+function ffi {
+  fdir=`pwd`
+  ftype='f'
+  fwhat=''
+  ffind=`which find`
+  do=1
+  if [ $# -eq 1 ]; then
+    fwhat=$1
+  elif [ $# -eq 2 ]; then
+    fdir=$1
+    fwhat=$2
+  elif [ $# -eq 3 ]; then
+    fdir=$1
+    ftype=$2
+    fwhat=$3
+  else
+    echo "usage: $0 [dir] [type] [what]"
+    do=0
+  fi
+  if [ $do -eq 1 ]; then
+    cmd="find $fdir -type $ftype -exec grep -Hin $fwhat {} \;"
+    eval $cmd
+  fi
+}
+
