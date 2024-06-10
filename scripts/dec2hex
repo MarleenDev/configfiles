@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+for var in "$@"
+do
+    printf '%i -> %X\n' $var $var
+done
+

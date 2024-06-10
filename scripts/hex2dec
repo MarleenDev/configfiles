@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+for var in "$@"
+do
+    printf '%X -> %i\n' $((0X${var})) $((0X${var}))
+done
