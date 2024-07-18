@@ -164,6 +164,15 @@ save a session named Session.vim:
 load session:
     :so Session.vim
 
+[bash]
+uppercase next word: ALT-u
+lowercase next word: ALT-l
+capitalize next word: ALT-c
+delete next word: ALT-d
+delete prev word: ALT-BACKSPACE  or CTRL-w
+kill whitespace: ALT-\
+tilde expand: ALT-&
+
 [FORT Robotics]
 NSCP:
     repo: safety-cert-nscp/develop
