@@ -1,6 +1,6 @@
 " useful commands:
 "  HEX edit:                    %!xxd
-"  source buffer as vim script: %so %
+"  source buffer as vim script: so %
 
 " leader key is SPACE
 let mapleader=" "
@@ -91,7 +91,10 @@ let path='$HOME/.vim/bundle'
 filetype off                   " required
 call vundle#begin()            " required
 Plugin 'VundleVim/Vundle.vim'  " required
-Plugin 'scrooloose/nerdtree'
+Plugin 'ryanoasis/vim-devicons'
+Plugin 'vim-scripts/a.vim'
+Plugin 'preservim/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'jlanzarotta/bufexplorer'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'bfrg/vim-cpp-modern'
@@ -129,6 +132,8 @@ Plugin 'mg979/vim-visual-multi'
 Plugin 'BurntSushi/ripgrep'
 Plugin 'junegunn/fzf'
 Plugin 'vim-scripts/MultipleSearch'
+" themes:
+Plugin 'morhetz/gruvbox'
 call vundle#end()              " required
 filetype plugin indent on      " required
 " " Brief help
@@ -143,6 +148,10 @@ filetype plugin indent on      " required
 
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc()==0 && !exists('s:std_in') | NERDTree | endif
+autocmd vimenter * ++nested colorscheme gruvbox
+
+" a.ivm
+let g:alternateNoDefaultAlternate = 1
 
 " vim-lsp
 if executable('sourcekit-lsp')
@@ -192,6 +201,18 @@ let g:airline_powerline_fonts=1
 
 " NERDTree
 let NERDTreeShowHidden=1   " use I to toggle
+let g:NERDTreeGitStatusIndicatorMapCustom = {
+                \ 'Modified'  :'✹',
+                \ 'Staged'    :'✚',
+                \ 'Untracked' :'✭',
+                \ 'Renamed'   :'➜',
+                \ 'Unmerged'  :'═',
+                \ 'Deleted'   :'✖',
+                \ 'Dirty'     :'✗',
+                \ 'Ignored'   :'☒',
+                \ 'Clean'     :'✔︎',
+                \ 'Unknown'   :'?',
+                \ }
 
 " snipmate
 let g:snipMate = { 'snippet_version' : 1 }
