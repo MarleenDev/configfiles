@@ -2,22 +2,136 @@
 "  HEX edit:                    %!xxd
 "  source buffer as vim script: so %
 
-" leader key is SPACE
-let mapleader=" "
-
+set nocompatible
+set nomodeline
+set undolevels=1000
+set timeoutlen=500  " time in ms for a key sequence to complete
+let mapleader="\\"
+let maplocalleader="\\"
 set langmenu=en_US
 let $LANG='en_US'
-set encoding=utf-8
-set guifont=DejaVu\ Sans\ Mono\ 14
+set encoding=utf8
+set guifont=Hack\ Nerd\ Font\ 18
+set nobomb  " don't clutter files with unicode BOMs
 set hidden
 set wildmenu
 " set ruler
+set title
+set lazyredraw  " do not redraw when executing macros
+set report=0  " always report changes
+if has("gui_running")
+    set cursorline
+    set cursorcolumn
+endif
+set autoread  " auto read files changed only from outside of vim
+if has("persistent_undo") && (&undofile)
+    set autowriteall    " auto write changes if persistent undo is enabled
+endif
+set fsync  " sync after write
+set confirm  " ask whether to save changed files
+set showmode
+
+set spelllang=en
+set nospell
+if has("autocmd")
+    augroup spell
+        autocmd!
+        "autocmd filetype vim setlocal spell enabled when editing vimrc
+    augroup END
+endif
+
+set nolist                            " hide unprintable characters
+if has("multi_byte")                  " if multi_byte is available,
+    set listchars=eol:¬,tab:▸\ ,trail:⌴ " use pretty Unicode unprintable symbols
+else                                  " otherwise,
+    set listchars=eol:$,tab:>\ ,trail:. " use ASCII characters
+endif
+
+" search and replace
+set wrapscan    " wrap around when searching
+set incsearch   " show match results while typing search pattern
+if (&t_Co > 2 || has("gui_running"))
+    set hlsearch  " highlight search terms
+endif
+" temporarily disable highlighting when entering insert mode
+if has("autocmd")
+    augroup hlsearch
+        autocmd!
+        autocmd InsertEnter * let g:restorehlsearch=&hlsearch | :set
+        nohlsearch
+        autocmd InsertLeave * let &hlsearch=g:restorehlsearch
+    augroup END
+endif
+set ignorecase  " case insensitive search
+set smartcase   " case insensitive only if search pattern is all lowercase
+                "   (smartcase requires ignorecase)
+set gdefault    " search/replace globally (on a line) by default
+
+" temporarily disable search highlighting
+nnoremap <silent> <leader><Space> :nohlsearch<CR>:match none<CR>:2match none<CR>:3match none<CR>
+
+" highlight all instances of the current word where the cursor is positioned
+nnoremap <silent> <leader>hs :setl hls<CR>:let @/="\\<<C-r><C-w>\\>"<CR>
+
+" use <leader>h1, <leader>h2, <leader>h3 to highlight words in different colors
+nnoremap <silent> <leader>h1 :highlight Highlight1 ctermfg=0 ctermbg=226 guifg=Black guibg=Yellow<CR> :execute 'match Highlight1 /\<<C-r><C-w>\>/'<cr>
+nnoremap <silent> <leader>h2 :highlight Highlight2 ctermfg=0 ctermbg=51 guifg=Black guibg=Cyan<CR> :execute '2match Highlight2 /\<<C-r><C-w>\>/'<cr>
+nnoremap <silent> <leader>h3 :highlight Highlight3 ctermfg=0 ctermbg=46 guifg=Black guibg=Green<CR> :execute '3match Highlight3 /\<<C-r><C-w>\>/'<cr>
+
+" replace word under cursor
+nnoremap <leader>; :%s/\<<C-r><C-w>\>//<Left>
+
+function! BlinkMatch(t)
+    let [l:bufnum, l:lnum, l:col, l:off] = getpos('.')
+    let l:current = '\c\%#'.@/
+    let l:highlight = matchadd('IncSearch', l:current, 1000)
+    redraw
+    exec 'sleep ' . float2nr(a:t * 1000) . 'm'
+    call matchdelete(l:highlight)
+    redraw
+endfunction
+
+" center screen on next/previous match, blink current match
+noremap <silent> n nzzzv:call BlinkMatch(0.2)<CR>
+noremap <silent> N Nzzzv:call BlinkMatch(0.2)<CR>
+
+
+" line numbering
+set number
+set relativenumber  " show relative line numbers
+set numberwidth=4   " narrow number column
+" cycles between relative / absolute / no numbering
+    function! RelativeNumberToggle()
+        if (&number == 1 && &relativenumber == 1)
+            set nonumber
+            set relativenumber relativenumber?
+        elseif (&number == 0 && &relativenumber == 1)
+            set norelativenumber
+            set number number?
+        elseif (&number == 1 && &relativenumber == 0)
+            set norelativenumber
+            set nonumber number?
+        else
+            set number
+            set relativenumber relativenumber?
+        endif
+    endfunc
+" nnoremap <silent> <leader>n :call RelativeNumberToggle()<CR>
 
 " No annoying sound on errors
 set noerrorbells
 set novisualbell
 set t_vb=
 set tm=500
+
+" <leader>ev edits .vimrc
+nnoremap <leader>ev :vsplit $MYVIMRC<CR>
+
+" <leader>sv sources .vimrc
+nnoremap <leader>sv :source $MYVIMRC<CR>:redraw<CR>:echo $MYVIMRC 'reloaded'<CR>
+
+" cd to the directory of the current buffer
+nnoremap <silent> <leader>cd :cd %:p:h<CR>
 
 " Properly disable sound on errors on MacVim
 if has("gui_macvim")
@@ -38,14 +152,12 @@ set whichwrap+=<,>,h,l
 
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
+set wildmode=longest:full,full
 if has("win16") || has("win32")
     set wildignore+=.git\*,.hg\*,.svn\*
 else
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
-
-" Don't redraw while executing macros (good performance config)
-set lazyredraw
 
 " For regular expressions turn magic on
 set magic
@@ -56,8 +168,8 @@ set showmatch
 set mat=2
 
 " :W sudo saves the file
-" (useful for handling the permission-denied error)
-command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+" command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+cabbrev w!! w !sudo tee % >/dev/null
 
 " OS dependent things
 " set an environment var VIMOS in each OS
@@ -86,31 +198,31 @@ elseif has('unix')
 endif
 
 " vundle
-set nocompatible               " be iMproved, required
 let path='$HOME/.vim/bundle'
 filetype off                   " required
 call vundle#begin()            " required
 Plugin 'VundleVim/Vundle.vim'  " required
-Plugin 'ryanoasis/vim-devicons'
 Plugin 'vim-scripts/a.vim'
 Plugin 'preservim/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'jlanzarotta/bufexplorer'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'bfrg/vim-cpp-modern'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'kien/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
-" Plugin 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 " Plugin 'MarcWeber/vim-addon-mw-utils'  " needed by vim-snipmate
 " Plugin 'tomtom/tlib_vim'               " needed by vim-snipmate
 " Plugin 'garbas/vim-snipmate'
-Plugin 'hrsh7th/vim-vsnip'
-Plugin 'hrsh7th/vim-vsnip-integ'
-Plugin 'rafamadriz/friendly-snippets'
-Plugin 'pangloss/vim-javascript'
+" Plugin 'hrsh7th/vim-vsnip'
+" Plugin 'hrsh7th/vim-vsnip-integ'
+" Plugin 'rafamadriz/friendly-snippets'
+" Plugin 'pangloss/vim-javascript'
 Plugin 'vim-airline/vim-airline'
-Plugin 'peterhoeg/vim-qml'
+Plugin 'vim-airline/vim-airline-themes'
+" Plugin 'peterhoeg/vim-qml'
 Plugin 'severin-lemaignan/vim-minimap'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'vim-scripts/DoxygenToolkit.vim'
@@ -132,8 +244,10 @@ Plugin 'mg979/vim-visual-multi'
 Plugin 'BurntSushi/ripgrep'
 Plugin 'junegunn/fzf'
 Plugin 'vim-scripts/MultipleSearch'
+Plugin 'ryanoasis/vim-devicons'
 " themes:
 Plugin 'morhetz/gruvbox'
+Plugin 'sainnhe/everforest'
 call vundle#end()              " required
 filetype plugin indent on      " required
 " " Brief help
@@ -176,43 +290,110 @@ autocmd FileType swift setlocal omnifunc=lsp#complete
   let g:airline#extensions#nvimlsp#close_lnum_symbol = ')'
 
 " bufexplorer
-" <Leader>be normal open
-" <Leader>bt toggle open / close
-" <Leader>bs force horizontal split open
-" <Leader>bv force vertical split open
+"<Leader>be normal open
+"<Leader>bt toggle open / close
+"<Leader>bs force horizontal split open
+"<Leader>bv force vertical split open
 let g:bufExplorerDefaultHelp=0
 let g:bufExplorerShowRelativePath=1
 let g:bufExplorerFindActive=1
 let g:bufExplorerSortBy='name'
 map <leader>o :BufExplorer<cr>
 
+" tmux integration
+" make arrow keys, home/end/pgup/pgdown, and function keys work when inside tmux
+if exists('$TMUX') && (system("tmux show-options -wg xterm-keys | cut -d' '-f2") =~ '^on')
+    " tmux will send xterm-style keys when its xterm-keys option is on
+    " add 'setw -g xterm-keys on' to your ~/.tmux.conf
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+    execute "set <xRight>=\e[1;*C"
+    execute "set <xLeft>=\e[1;*D"
+    execute "set <xHome>=\e[1;*H"
+    execute "set <xEnd>=\e[1;*F"
+    execute "set <Insert>=\e[2;*~"
+    execute "set <Delete>=\e[3;*~"
+    execute "set <PageUp>=\e[5;*~"
+    execute "set <PageDown>=\e[6;*~"
+    execute "set <xF1>=\e[1;*P"
+    execute "set <xF2>=\e[1;*Q"
+    execute "set <xF3>=\e[1;*R"
+    execute "set <xF4>=\e[1;*S"
+    execute "set <F5>=\e[15;*~"
+    execute "set <F6>=\e[17;*~"
+    execute "set <F7>=\e[18;*~"
+    execute "set <F8>=\e[19;*~"
+    execute "set <F9>=\e[20;*~"
+    execute "set <F10>=\e[21;*~"
+    execute "set <F11>=\e[23;*~"
+    execute "set <F12>=\e[24;*~"
+endif
+
 " vim-airline
 let g:airline#extensions#ale#enabled=1
 let g:airline#extensions#nerdtree_statusline=1
-let g:airline_experimental = 1
-let g:airline_left_sep='>'
-let g:airline_right_sep='<'
-let g:airline_detect_modified=1
-let g:airline_detect_paste=1
-let g:airline_inactive_collapse=1
-let g:airline_inactive_alt_sep=1
-let g:airline_theme='dark'
+let g:airline#extensions#tabline#formatter = 'default'
+let g:airline_experimental=1
+let g:airline_solarized_bg='dark'
+" let g:airline_left_sep='>'
+" let g:airline_right_sep='<'
+" let g:airline_detect_modified=1
+" let g:airline_detect_paste=1
+" let g:airline_inactive_collapse=1
+" let g:airline_inactive_alt_sep=1
+let g:airline_theme='cobalt2'
 let g:airline_powerline_fonts=1
+function! WindowNumber(...)
+    let builder = a:1
+    let context = a:2
+    call builder.add_section('airline_b', '%{tabpagewinnr(tabpagenr())}')
+    return 0
+endfunction
+call airline#add_statusline_func('WindowNumber')
+call airline#add_inactive_statusline_func('WindowNumber')
 
 " NERDTree
 let NERDTreeShowHidden=1   " use I to toggle
-let g:NERDTreeGitStatusIndicatorMapCustom = {
-                \ 'Modified'  :'✹',
-                \ 'Staged'    :'✚',
-                \ 'Untracked' :'✭',
-                \ 'Renamed'   :'➜',
-                \ 'Unmerged'  :'═',
-                \ 'Deleted'   :'✖',
-                \ 'Dirty'     :'✗',
-                \ 'Ignored'   :'☒',
-                \ 'Clean'     :'✔︎',
-                \ 'Unknown'   :'?',
-                \ }
+let g:WebDevIconsDisableDefaultFolderSymbolColorFromNERDTreeDir = 1
+let g:WebDevIconsDisableDefaultFileSymbolColorFromNERDTreeFile = 1
+" in case of no devicons:
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+" folders
+let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
+let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
+" you can add these colors to your .vimrc to help customizing
+let s:brown = "905532"
+let s:aqua =  "3AFFDB"
+let s:blue = "689FB6"
+let s:darkBlue = "44788E"
+let s:purple = "834F79"
+let s:lightPurple = "834F79"
+let s:red = "AE403F"
+let s:beige = "F5C06F"
+let s:yellow = "F09F17"
+let s:orange = "D4843E"
+let s:darkOrange = "F16529"
+let s:pink = "CB6F6F"
+let s:salmon = "EE6E73"
+let s:green = "8FAA54"
+let s:lightGreen = "31B53E"
+let s:white = "FFFFFF"
+let s:rspec_red = 'FE405F'
+let s:git_orange = 'F54D27'
+let g:NERDTreeExtensionHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreeExtensionHighlightColor['css'] = s:blue " sets the color of css files to blue
+let g:NERDTreeExactMatchHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreeExactMatchHighlightColor['.gitignore'] = s:git_orange " sets the color for .gitignore files
+let g:NERDTreePatternMatchHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreePatternMatchHighlightColor['.*_spec\.rb$'] = s:rspec_red " sets the color for files ending with _spec.rb
+let g:WebDevIconsDefaultFolderSymbolColor = s:beige " sets the color for folders that did not match any rule
+let g:WebDevIconsDefaultFileSymbolColor = s:blue " sets the color for files that did not match any rule
+"nnoremap <leader>n :NERDTreeFocus<CR>
+"nnoremap <C-n> :NERDTree<CR>
+nnoremap <F2> :NERDTreeToggle<CR>
+"nnoremap <C-f> :NERDTreeFind<CR>
 
 " snipmate
 let g:snipMate = { 'snippet_version' : 1 }
@@ -323,24 +504,96 @@ let g:multi_cursor_quit_key            = '<Esc>'
 
 " general stuff
 syntax enable
+set expandtab
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-set expandtab
+set autoindent
+set copyindent
+set shiftround   " use multiple of shiftwidth when indenting with '<' and '>'
 set smarttab
 set hlsearch
 set nowrap
+set linebreak
+set nojoinspaces  " compact space when joining lines
 set colorcolumn=110
 highlight ColorColumn ctermbg=darkgray
-set nobackup
-set nowb
-set noswapfile
+
+" make Y consistent with C and D by yanking up to end of line
+noremap Y y$
+
+if has("autocmd")
+    augroup makefile
+        autocmd!
+        " don't expand tab to space in Makefiles
+        autocmd filetype make setlocal noexpandtab
+    augroup END
+endif
+
+" <leader>rt retabs the file, preserve cursor position
+nnoremap <silent> <leader>rt :call Preserve(":retab")<CR>
+
+" <leader>s removes trailing spaces
+noremap <silent> <leader>s :call Preserve("%s/\\s\\+$//e")<CR>
+
+" <leader>$ fixes mixed EOLs (^M)
+noremap <silent> <leader>$ :call Preserve("%s/<C-V><CR>//e")<CR>
+
+" use <leader>d to delete a line without adding it to the yanked stack
+nnoremap <silent> <leader>d "_d
+vnoremap <silent> <leader>d "_d
+
+" use <leader>c to replace text without yanking replaced text
+nnoremap <silent> <leader>c "_c
+vnoremap <silent> <leader>c "_c
+
+" yank/paste to/from the OS clipboard
+noremap <silent> <leader>y "+y
+noremap <silent> <leader>Y "+Y
+noremap <silent> <leader>p "+p
+noremap <silent> <leader>P "+P
+
+" paste without yanking replaced text in visual mode
+vnoremap <silent> p "_dP
+vnoremap <silent> P "_dp
+
+set showmatch     " briefly jumps the cursor to the matching brace on insert
+set matchtime=4   " blink matching braces for 0.4s
+set matchpairs+=<:>         " make < and > match
+runtime macros/matchit.vim  " enable extended % matching
+
+" backup and swap files
+set backup
+set writebackup
+set swapfile
+let s:vimdir=$HOME . "/.vim"
+let &backupdir=s:vimdir . "/backup"  " backups location
+let &directory=s:vimdir . "/tmp"     " swap location
+if exists("*mkdir")
+    if !isdirectory(s:vimdir)
+        call mkdir(s:vimdir, "p")
+    endif
+    if !isdirectory(&backupdir)
+        call mkdir(&backupdir, "p")
+    endif
+    if !isdirectory(&directory)
+        call mkdir(&directory, "p")
+    endif
+endif
+set backupskip+=*.tmp " skip backup for *.tmp
+if has("persistent_undo")
+      let &undodir=&backupdir
+        set undofile  " enable persistent undo
+endif
+let &viminfo=&viminfo . ",n" . s:vimdir . "/.viminfo" " viminfo location
 
 " solarized
 set background=dark
 let g:solarized_termcolors=256
 let g:solarized_termtrans=1
-colorscheme solarized
+"colorscheme solarized
+"colorscheme gruvbox
+colorscheme everforest
 if has('gui_running')
     if (has("termguicolors"))
         set termguicolors
