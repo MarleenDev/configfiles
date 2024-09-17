@@ -21,13 +21,16 @@ set lazyredraw  " do not redraw when executing macros
 set report=0  " always report changes
 set cursorline
 set cursorcolumn
-set autoread  " auto read files changed only from outside of vim
+set autoread  " autoread files changed only from outside of vim
 if has("persistent_undo") && (&undofile)
-    set autowriteall    " auto write changes if persistent undo is enabled
+    " set autowriteall    " auto write changes if persistent undo is enabled
 endif
 set fsync  " sync after write
 set confirm  " ask whether to save changed files
 set showmode
+set cmdheight=1
+set shortmess+=t
+set shortmess+=a
 
 set spelllang=en
 set nospell
@@ -99,21 +102,21 @@ set number
 set relativenumber  " show relative line numbers
 set numberwidth=4   " narrow number column
 " cycles between relative / absolute / no numbering
-    function! RelativeNumberToggle()
-        if (&number == 1 && &relativenumber == 1)
-            set nonumber
-            set relativenumber relativenumber?
-        elseif (&number == 0 && &relativenumber == 1)
-            set norelativenumber
-            set number number?
-        elseif (&number == 1 && &relativenumber == 0)
-            set norelativenumber
-            set nonumber number?
-        else
-            set number
-            set relativenumber relativenumber?
-        endif
-    endfunc
+function RelativeNumberToggle()
+    if (&number == 1 && &relativenumber == 1)
+        set nonumber
+        set relativenumber relativenumber?
+    elseif (&number == 0 && &relativenumber == 1)
+        set norelativenumber
+        set number number?
+    elseif (&number == 1 && &relativenumber == 0)
+        set norelativenumber
+        set nonumber number?
+    else
+        set number
+        set relativenumber relativenumber?
+    endif
+endfunc
 " nnoremap <silent> <leader>n :call RelativeNumberToggle()<CR>
 
 " No annoying sound on errors
