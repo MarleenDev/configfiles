@@ -19,10 +19,8 @@ set wildmenu
 set title
 set lazyredraw  " do not redraw when executing macros
 set report=0  " always report changes
-if has("gui_running")
-    set cursorline
-    set cursorcolumn
-endif
+set cursorline
+set cursorcolumn
 set autoread  " auto read files changed only from outside of vim
 if has("persistent_undo") && (&undofile)
     set autowriteall    " auto write changes if persistent undo is enabled
@@ -49,7 +47,7 @@ endif
 
 " search and replace
 set wrapscan    " wrap around when searching
-set incsearch   " show match results while typing search pattern
+" set incsearch   " show match results while typing search pattern
 if (&t_Co > 2 || has("gui_running"))
     set hlsearch  " highlight search terms
 endif
@@ -65,7 +63,7 @@ endif
 set ignorecase  " case insensitive search
 set smartcase   " case insensitive only if search pattern is all lowercase
                 "   (smartcase requires ignorecase)
-set gdefault    " search/replace globally (on a line) by default
+" set gdefault    " search/replace globally (on a line) by default
 
 " temporarily disable search highlighting
 nnoremap <silent> <leader><Space> :nohlsearch<CR>:match none<CR>:2match none<CR>:3match none<CR>
@@ -92,8 +90,8 @@ function! BlinkMatch(t)
 endfunction
 
 " center screen on next/previous match, blink current match
-noremap <silent> n nzzzv:call BlinkMatch(0.2)<CR>
-noremap <silent> N Nzzzv:call BlinkMatch(0.2)<CR>
+" noremap <silent> n nzzzv:call BlinkMatch(0.2)<CR>
+" noremap <silent> N Nzzzv:call BlinkMatch(0.2)<CR>
 
 
 " line numbering
@@ -167,7 +165,7 @@ set showmatch
 " How many tenths of a second to blink when matching brackets
 set mat=2
 
-" :W sudo saves the file
+" save file using sudo when permissions are not sufficient
 " command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 cabbrev w!! w !sudo tee % >/dev/null
 
@@ -530,6 +528,15 @@ if has("autocmd")
     augroup END
 endif
 
+function! Preserve(command)
+  let l:search=@/
+  let l:line = line(".")
+  let l:col = col(".")
+  execute a:command
+  let @/=l:search
+  call cursor(l:line, l:col)
+endfunction
+
 " <leader>rt retabs the file, preserve cursor position
 nnoremap <silent> <leader>rt :call Preserve(":retab")<CR>
 
@@ -561,6 +568,9 @@ set showmatch     " briefly jumps the cursor to the matching brace on insert
 set matchtime=4   " blink matching braces for 0.4s
 set matchpairs+=<:>         " make < and > match
 runtime macros/matchit.vim  " enable extended % matching
+
+" make dot work in visual mode
+vnoremap . :normal .<CR>
 
 " backup and swap files
 set backup
