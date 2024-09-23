@@ -21,16 +21,39 @@ set lazyredraw  " do not redraw when executing macros
 set report=0  " always report changes
 set cursorline
 set cursorcolumn
-set autoread  " autoread files changed only from outside of vim
-if has("persistent_undo") && (&undofile)
-    " set autowriteall    " auto write changes if persistent undo is enabled
+
+" persistent undo
+if has("persistent_undo")
+    set undofile
+    set autowriteall    " auto write changes if persistent undo is enabled
 endif
+" backup and swap files
+set backup
+set writebackup
+set swapfile
+let s:vimdir=$HOME . "/.vim"
+let &backupdir=s:vimdir . "/backup"  " backups location
+let &directory=s:vimdir . "/tmp"     " swap location
+if exists("*mkdir")
+    if !isdirectory(s:vimdir)
+        call mkdir(s:vimdir, "p")
+    endif
+    if !isdirectory(&backupdir)
+        call mkdir(&backupdir, "p")
+    endif
+    if !isdirectory(&directory)
+        call mkdir(&directory, "p")
+    endif
+endif
+set backupskip+=*.tmp " skip backup for *.tmp
+if has("persistent_undo")
+    let &undodir=&backupdir
+endif
+let &viminfo=&viminfo . ",n" . s:vimdir . "/.viminfo" " viminfo location
+
 set fsync  " sync after write
 set confirm  " ask whether to save changed files
 set showmode
-set cmdheight=1
-set shortmess+=t
-set shortmess+=a
 
 set spelllang=en
 set nospell
@@ -53,15 +76,6 @@ set wrapscan    " wrap around when searching
 " set incsearch   " show match results while typing search pattern
 if (&t_Co > 2 || has("gui_running"))
     set hlsearch  " highlight search terms
-endif
-" temporarily disable highlighting when entering insert mode
-if has("autocmd")
-    augroup hlsearch
-        autocmd!
-        autocmd InsertEnter * let g:restorehlsearch=&hlsearch | :set
-        nohlsearch
-        autocmd InsertLeave * let &hlsearch=g:restorehlsearch
-    augroup END
 endif
 set ignorecase  " case insensitive search
 set smartcase   " case insensitive only if search pattern is all lowercase
@@ -159,6 +173,9 @@ if has("win16") || has("win32")
 else
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
+
+" Don't redraw while executing macros (good performance config)
+set lazyredraw
 
 " For regular expressions turn magic on
 set magic
@@ -355,6 +372,18 @@ call airline#add_inactive_statusline_func('WindowNumber')
 
 " NERDTree
 let NERDTreeShowHidden=1   " use I to toggle
+let g:NERDTreeGitStatusIndicatorMapCustom = {
+                \ 'Modified'  :'✹',
+                \ 'Staged'    :'✚',
+                \ 'Untracked' :'✭',
+                \ 'Renamed'   :'➜',
+                \ 'Unmerged'  :'═',
+                \ 'Deleted'   :'✖',
+                \ 'Dirty'     :'✗',
+                \ 'Ignored'   :'☒',
+                \ 'Clean'     :'✔︎',
+                \ 'Unknown'   :'?',
+                \ }
 let g:WebDevIconsDisableDefaultFolderSymbolColorFromNERDTreeDir = 1
 let g:WebDevIconsDisableDefaultFileSymbolColorFromNERDTreeFile = 1
 " in case of no devicons:
@@ -620,13 +649,6 @@ endif
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
-
-" persistent undo
-try
-    set undodir=~/.vim_runtime/undodir
-    set undofile
-catch
-endtry
 
 " Visual mode pressing * or # searches for the current selection
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
