@@ -21,12 +21,23 @@ set lazyredraw  " do not redraw when executing macros
 set report=0  " always report changes
 set cursorline
 set cursorcolumn
+syntax enable
+set expandtab
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set autoindent
+set copyindent
+set shiftround   " use multiple of shiftwidth when indenting with '<' and '>'
+set smarttab
+set hlsearch
+set nowrap
+set linebreak
+set nojoinspaces  " compact space when joining lines
+set colorcolumn=110
+highlight ColorColumn ctermbg=darkgray
 
-" persistent undo
-if has("persistent_undo")
-    set undofile
-    set autowriteall    " auto write changes if persistent undo is enabled
-endif
+
 " backup and swap files
 set backup
 set writebackup
@@ -48,6 +59,8 @@ endif
 set backupskip+=*.tmp " skip backup for *.tmp
 if has("persistent_undo")
     let &undodir=&backupdir
+    set undofile  " enable persistent undo
+    set autowriteall    " auto write changes if persistent undo is enabled
 endif
 let &viminfo=&viminfo . ",n" . s:vimdir . "/.viminfo" " viminfo location
 
@@ -77,10 +90,6 @@ set wrapscan    " wrap around when searching
 if (&t_Co > 2 || has("gui_running"))
     set hlsearch  " highlight search terms
 endif
-set ignorecase  " case insensitive search
-set smartcase   " case insensitive only if search pattern is all lowercase
-                "   (smartcase requires ignorecase)
-" set gdefault    " search/replace globally (on a line) by default
 
 " temporarily disable search highlighting
 nnoremap <silent> <leader><Space> :nohlsearch<CR>:match none<CR>:2match none<CR>:3match none<CR>
@@ -482,7 +491,7 @@ elseif g:os=='cygwin'
     set tags+=/d/dev/tags_qt59
 elseif g:os=='macosx'
 elseif g:os=='linux'
-    set tags=./tags
+    set tags=tags
   "set tags+=/home/marleenvos/dev/projects/ldd3_yocto/sources/ldd3/TAGS
   "set tags+=/home/marleenvos/dev/repos/linux/TAGS
   "set tags+=/home/marleenvos/dev/repos/bluez/tags
@@ -531,23 +540,6 @@ let g:multi_cursor_next_key            = '<C-s>'
 let g:multi_cursor_prev_key            = '<C-p>'
 let g:multi_cursor_skip_key            = '<C-x>'
 let g:multi_cursor_quit_key            = '<Esc>'
-
-" general stuff
-syntax enable
-set expandtab
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set autoindent
-set copyindent
-set shiftround   " use multiple of shiftwidth when indenting with '<' and '>'
-set smarttab
-set hlsearch
-set nowrap
-set linebreak
-set nojoinspaces  " compact space when joining lines
-set colorcolumn=110
-highlight ColorColumn ctermbg=darkgray
 
 " make Y consistent with C and D by yanking up to end of line
 noremap Y y$
@@ -603,31 +595,6 @@ runtime macros/matchit.vim  " enable extended % matching
 
 " make dot work in visual mode
 vnoremap . :normal .<CR>
-
-" backup and swap files
-set backup
-set writebackup
-set swapfile
-let s:vimdir=$HOME . "/.vim"
-let &backupdir=s:vimdir . "/backup"  " backups location
-let &directory=s:vimdir . "/tmp"     " swap location
-if exists("*mkdir")
-    if !isdirectory(s:vimdir)
-        call mkdir(s:vimdir, "p")
-    endif
-    if !isdirectory(&backupdir)
-        call mkdir(&backupdir, "p")
-    endif
-    if !isdirectory(&directory)
-        call mkdir(&directory, "p")
-    endif
-endif
-set backupskip+=*.tmp " skip backup for *.tmp
-if has("persistent_undo")
-      let &undodir=&backupdir
-        set undofile  " enable persistent undo
-endif
-let &viminfo=&viminfo . ",n" . s:vimdir . "/.viminfo" " viminfo location
 
 " solarized
 set background=dark
