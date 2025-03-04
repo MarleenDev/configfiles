@@ -2,13 +2,6 @@
 
 # source /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh
 
-export PATH=/usr/local/bin:/opt/homebrew/bin:$PATH:/home/marleenvos/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
-export PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ '
-export LC_ALL="en_US.UTF-8"
-export JAVA_PATH=/usr/lib/jvm/java-19-openjdk-amd64
-export STM32CubeMX_PATH=/home/marleenvos/STM32CubeMX
-
-
 # fortrobotics
 export CONAN_REVISIONS_ENABLED=1
 export PATH=~/.local/bin:/opt/gcc-arm-none-eabi/bin:$PATH
@@ -17,6 +10,21 @@ alias fortnsc='cd /home/marleenvos/dev/projects/FORTRobotics/repos/nsc/NSC'
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+#incus
+export CGO_CFLAGS="-I/home/marleenvos/go/deps/raft/include/ -I/home/marleenvos/go/deps/cowsql/include/"
+export CGO_LDFLAGS="-L/home/marleenvos/go/deps/raft/.libs -L/home/marleenvos/go/deps/cowsql/.libs/"
+export LD_LIBRARY_PATH="/home/marleenvos/go/deps/raft/.libs/:/home/marleenvos/go/deps/cowsql/.libs/"
+export CGO_LDFLAGS_ALLOW="(-Wl,-wrap,pthread_create)|(-Wl,-z,now)"
+
+# /usr/local first:
+export PATH=/usr/local/bin:/opt/homebrew/bin:$PATH:/home/marleenvos/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
+
+export PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ '
+export LC_ALL="en_US.UTF-8"
+export JAVA_PATH=/usr/lib/jvm/java-19-openjdk-amd64
+export STM32CubeMX_PATH=/home/marleenvos/STM32CubeMX
 
 export VIMOS='linux'
 

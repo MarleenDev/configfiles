@@ -37,6 +37,7 @@ set nojoinspaces  " compact space when joining lines
 set colorcolumn=110
 highlight ColorColumn ctermbg=darkgray
 
+" set path+=Inc
 
 " backup and swap files
 set backup

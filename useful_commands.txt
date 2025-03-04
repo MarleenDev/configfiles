@@ -187,6 +187,8 @@ add key to agent:
     ssh-add ~/.ssh/id_ed25519_github
 
 [FORT Robotics]
+SMCU: STM32F091CC
+AMCU: LPC54608J512
 NSCP:
     repo: safety-cert-nscp/develop
     build:
@@ -201,4 +203,11 @@ SRCP:
         SKIPLINT=1 PLATFORM=srcpd1 DEBUG=1 Build=Debug make -f conan.mk build
     test:
         ceedling options:srcp test:all
+WESP breakout board:
+    Flash with stm32cubeprogrammer:
+        opt bytes: 0x1FFFF800 ER_DEBUG_OPT_BYTES.bin
+        fs: 0x0803FC00        ER_FS.bin
+        ro: 0x08000000        ER_RO.bin
+        Make sure to flash both smcus!
+    Flash .axf file with ozone and debug
 
