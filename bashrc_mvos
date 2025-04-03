@@ -2,6 +2,9 @@
 
 # source /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh
 
+ulimit -c unlimited
+export CORE=/var/lib/systemd/coredump
+
 # fortrobotics
 export CONAN_REVISIONS_ENABLED=1
 export PATH=~/.local/bin:/opt/gcc-arm-none-eabi/bin:$PATH
@@ -18,8 +21,8 @@ export LD_LIBRARY_PATH="/home/marleenvos/go/deps/raft/.libs/:/home/marleenvos/go
 export CGO_LDFLAGS_ALLOW="(-Wl,-wrap,pthread_create)|(-Wl,-z,now)"
 
 # /usr/local first:
-export PATH=/usr/local/bin:/opt/homebrew/bin:$PATH:/home/marleenvos/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
-export LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
+#export PATH=/usr/local/bin:/opt/homebrew/bin:$PATH:/home/marleenvos/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
+#export LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
 
 export PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ '
 export LC_ALL="en_US.UTF-8"

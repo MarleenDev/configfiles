@@ -85,6 +85,12 @@ else                                  " otherwise,
     set listchars=eol:$,tab:>\ ,trail:. " use ASCII characters
 endif
 
+" vimundo plugin
+nnoremap <F6> :MundoToggle<CR>
+let g:mundo_width = 60
+let g:mundo_preview_height = 40
+let g:mundo_right = 1
+
 " search and replace
 set wrapscan    " wrap around when searching
 " set incsearch   " show match results while typing search pattern
@@ -119,7 +125,6 @@ endfunction
 " center screen on next/previous match, blink current match
 " noremap <silent> n nzzzv:call BlinkMatch(0.2)<CR>
 " noremap <silent> N Nzzzv:call BlinkMatch(0.2)<CR>
-
 
 " line numbering
 set number
@@ -259,9 +264,13 @@ Plugin 'tpope/vim-surround'
 Plugin 'dense-analysis/ale'
 Plugin 'preservim/vim-pencil'
 Plugin 'bfrg/vim-jq'
+Plugin 'simnalamburt/vim-mundo'
 Plugin 'tpope/vim-fugitive'
+Plugin 'junegunn/gv.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mg979/vim-visual-multi'
+Plugin 'junegunn/vim-peekaboo'
+Plugin 'tpope/vim-unimpaired'
 " Plugin 'prabirshrestha/vim-lsp'
 " Plugin 'mattn/vim-lsp-settings'
 " Plugin 'prabirshrestha/asyncomplete.vim'
@@ -273,9 +282,12 @@ Plugin 'BurntSushi/ripgrep'
 Plugin 'junegunn/fzf'
 Plugin 'vim-scripts/MultipleSearch'
 Plugin 'ryanoasis/vim-devicons'
-" themes:
+" Themes:
 Plugin 'morhetz/gruvbox'
 Plugin 'sainnhe/everforest'
+" To test:
+" Plugin 'tpope/vim-sleuth'
+"Plugin 'vim-scripts/VimCompletesMe'
 call vundle#end()              " required
 filetype plugin indent on      " required
 " " Brief help
@@ -494,7 +506,7 @@ elseif g:os=='macosx'
 elseif g:os=='linux'
     set tags=tags
   "set tags+=/home/marleenvos/dev/projects/ldd3_yocto/sources/ldd3/TAGS
-  "set tags+=/home/marleenvos/dev/repos/linux/TAGS
+  "set tags+=/home/marleenvos/dev/repos/linux/tags
   "set tags+=/home/marleenvos/dev/repos/bluez/tags
   "set tags+=/usr/include/glib-2.0/tags
 endif
