@@ -37,6 +37,9 @@ set nojoinspaces  " compact space when joining lines
 set colorcolumn=110
 highlight ColorColumn ctermbg=darkgray
 
+" when using star (*) to search, keep the cursor in the current position:
+nnoremap <expr> * ':%s/'.expand('<cword>').'//gn<CR>``'
+
 " set path+=Inc
 
 " backup and swap files
@@ -282,6 +285,8 @@ Plugin 'BurntSushi/ripgrep'
 Plugin 'junegunn/fzf'
 Plugin 'vim-scripts/MultipleSearch'
 Plugin 'ryanoasis/vim-devicons'
+Plugin 'google/vim-searchindex'
+Plugin 'linjiX/vim-star'
 " Themes:
 Plugin 'morhetz/gruvbox'
 Plugin 'sainnhe/everforest'
@@ -756,6 +761,25 @@ inoremap $3 {}<esc>i
 inoremap $4 {<esc>o}<esc>O
 inoremap $q ''<esc>i
 inoremap $e ""<esc>i
+
+" vim-star
+" vmap <silent> * <Plug>(star-*)
+" vmap <silent> # <Plug>(star-#)
+" nmap <silent> * <Plug>(star-*)
+" nmap <silent> # <Plug>(star-#)
+" nmap <silent> g* <Plug>(star-g*)
+" nmap <silent> g# <Plug>(star-g#)
+" Keep the cursor positon unchanged when use * to search
+let g:star_keep_cursor_pos = 1
+
+" vim-searchindex (combined with vim-star)
+let g:star_echo_search_pattern = 0
+vmap <silent> * <Plug>(star-*):SearchIndex<CR>
+vmap <silent> # <Plug>(star-#):SearchIndex<CR>
+nmap <silent> * <Plug>(star-*):SearchIndex<CR>
+nmap <silent> # <Plug>(star-#):SearchIndex<CR>
+nmap <silent> g* <Plug>(star-g*):SearchIndex<CR>
+nmap <silent> g# <Plug>(star-g#):SearchIndex<CR>
 
 " compiling
 map <F5> :call CompileRun()<CR>
