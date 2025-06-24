@@ -291,7 +291,8 @@ Plugin 'linjiX/vim-star'
 Plugin 'morhetz/gruvbox'
 Plugin 'sainnhe/everforest'
 " To test:
-" Plugin 'tpope/vim-sleuth'
+"Plugin 'davidhalter/jedi-vim'
+"Plugin 'tpope/vim-sleuth'
 "Plugin 'vim-scripts/VimCompletesMe'
 call vundle#end()              " required
 filetype plugin indent on      " required
@@ -515,6 +516,26 @@ elseif g:os=='linux'
   "set tags+=/home/marleenvos/dev/repos/bluez/tags
   "set tags+=/usr/include/glib-2.0/tags
 endif
+
+" python jedi
+let g:jedi#environment_path = "/usr/bin/python3.10"
+"let g:jedi#environment_path = "venv"
+"let g:jedi#auto_initialization = 0   # set to 0 to disable auto init
+"let g:jedi#auto_vim_configuration = 0   # set to 0 to disable auto init
+"let g:jedi#use_tabs_not_buffers = 1
+let g:jedi#use_splits_not_buffers = "left"
+"let g:jedi#popup_on_dot = 0   # set to 0 to disable auto start complete
+"let g:jedi#popup_select_first = 0
+"let g:jedi#show_call_signatures = "1"
+"let g:jedi#goto_command = "<leader>d"
+"let g:jedi#goto_assignments_command = "<leader>g"
+"let g:jedi#goto_stubs_command = "<leader>s"
+"let g:jedi#goto_definitions_command = ""
+"let g:jedi#documentation_command = "K"
+"let g:jedi#usages_command = "<leader>n"
+"let g:jedi#completions_command = "<C-Space>"
+"let g:jedi#rename_command = "<leader>r"
+"let g:jedi#rename_command_keep_name = "<leader>R"
 
 " clang
 if g:os=='windows'
@@ -809,6 +830,9 @@ elseif &filetype == 'matlab'
     exec "!time octave %"
 endif
 endfunc
+
+" pydoc
+nnoremap <buffer> H :<C-u>execute "!pydoc3 " . expand("<cword>")<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
