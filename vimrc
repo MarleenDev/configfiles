@@ -192,9 +192,6 @@ else
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
 
-" Don't redraw while executing macros (good performance config)
-set lazyredraw
-
 " For regular expressions turn magic on
 set magic
 
@@ -287,6 +284,8 @@ Plugin 'vim-scripts/MultipleSearch'
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'google/vim-searchindex'
 Plugin 'linjiX/vim-star'
+Plugin 'preservim/vim-indent-guides'
+Plugin 'frazrepo/vim-rainbow'
 " Themes:
 Plugin 'morhetz/gruvbox'
 Plugin 'sainnhe/everforest'
@@ -335,6 +334,17 @@ autocmd FileType swift setlocal omnifunc=lsp#complete
 " nvimlsp close_lnum_symbol - needs v:lua.vim.diagnostic.get
   let g:airline#extensions#nvimlsp#close_lnum_symbol = ')'
 
+" vim-rainbow
+let g:rainbow_active = 1
+" let g:rainbow_load_separately = [
+    " \ [ '*' , [['(', ')'], ['\[', '\]'], ['{', '}']] ],
+    " \ [ '*.tex' , [['(', ')'], ['\[', '\]']] ],
+    " \ [ '*.cpp' , [['(', ')'], ['\[', '\]'], ['{', '}']] ],
+    " \ [ '*.{html,htm}' , [['(', ')'], ['\[', '\]'], ['{', '}'], ['<\a[^>]*>', '</[^>]*>']] ],
+    " \ ]
+" let g:rainbow_guifgs = ['RoyalBlue3', 'DarkOrange3', 'DarkOrchid3', 'FireBrick']
+" let g:rainbow_ctermfgs = ['lightblue', 'lightgreen', 'yellow', 'red', 'magenta']
+
 " bufexplorer
 "<Leader>be normal open
 "<Leader>bt toggle open / close
@@ -374,6 +384,11 @@ if exists('$TMUX') && (system("tmux show-options -wg xterm-keys | cut -d' '-f2")
     execute "set <F11>=\e[23;*~"
     execute "set <F12>=\e[24;*~"
 endif
+
+" vim-indent-guides
+" let g:indent_guides_enable_on_vim_startup = 1
+" let g:indent_guides_start_level = 2
+"let g:indent_guides_guide_size = 1
 
 " vim-airline
 let g:airline#extensions#ale#enabled=1
@@ -567,18 +582,6 @@ let g:ctrlp_custom_ignore = {
 " map <leader>b :CtrlPBuffer<cr>
 " let g:ctrlp_max_height = 20
 " let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git\|^\.coffee'
-
-" multiple cursors:
-let g:multi_cursor_use_default_mapping=0
-" Default mapping
-let g:multi_cursor_start_word_key      = '<C-s>'
-let g:multi_cursor_select_all_word_key = '<A-s>'
-let g:multi_cursor_start_key           = 'g<C-s>'
-let g:multi_cursor_select_all_key      = 'g<A-s>'
-let g:multi_cursor_next_key            = '<C-s>'
-let g:multi_cursor_prev_key            = '<C-p>'
-let g:multi_cursor_skip_key            = '<C-x>'
-let g:multi_cursor_quit_key            = '<Esc>'
 
 " make Y consistent with C and D by yanking up to end of line
 noremap Y y$
