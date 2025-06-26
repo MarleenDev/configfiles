@@ -1,6 +1,111 @@
 " useful commands:
-"  HEX edit:                    %!xxd
-"  source buffer as vim script: so %
+"   HEX edit:                     %!xxd
+"   source buffer as vim script:  so %
+"   sudo write file:              w!!
+"   toggle indent guides:         IndentGuidesToggle
+"   display normal mode mappings: nmap
+"   display visual mode mappings: vmap
+"   display insert mode mappings: imap
+"   vimdiff of current buffer:    GitGutterDiffOrig
+"   toggle fold unchanged lines:  GitGutterFold
+"   git commands with fugitive:   Git
+"
+" configured keys: (leader=\)
+"   F5                  : compile/run
+"   F6                  : toggle undo
+"   leader+space        : search highlight off
+"   leader+hs           : highlight instances of current word
+"   leader+h+1,2,3,...  : highlight instances in different colour
+"   leader+;            : replace word under cursor
+"   leader+o            : buffer explorer
+"   leader+bt           : buffer explorer toggle open/close
+"   leader+be           : buffer explorer normal open
+"   leader+bs           : buffer explorer horizontal split open
+"   leader+bv           : buffer explorer vertical split open
+"   F4                  : toggle tagbar
+"   leader+rt           : retab file
+"   leader+s            : remove trailing spaces
+"   leader+$            : fix mixed EOLs
+"   leader+d            : delete line without yank
+"   leader+c            : replace text without yank
+"   leader+y or Y       : copy from OS clipboard
+"   leader+p or P       : paste to OS clipboard
+"   alt-down            : move to window below
+"   alt-up              : move to window above
+"   alt-left            : move to window to the left
+"   alt-right           : move to window to the right
+"   leader+cr           : disable highlight
+"   leader+bd           : close current buffer
+"   leader+ba           : close all buffers
+"   leader+l            : previous buffer
+"   leader+n            : next buffer
+"   leader+tn           : new tab
+"   leader+to           : close all other tabs
+"   leader+tc           : close tab
+"   leader+tm N         : move tab to after tab N, 0 makes first, without N makes last
+"   leader+t+           : next tab
+"   leader+t-           : previous tab
+"   leader+tl           : toggle between this and last accessed tab
+"   leader+ss           : toogle spell checking
+"   leader+m            : remove windows ^M
+"   leader+q            : quickly open a new buffer for scribble
+"   leader+x            : quickly open a new markdown buffer for scribble
+"   leader+pp           : toggle paste mode
+"   leader+te           : new tab with current buffer's path
+"   leader+cd           : switch CWD to dir of open buffer
+"   leader+jq           : JSON beautifier
+"
+" gitgutter:
+"   leader+gt           : toggle gitgutter
+"   leader+gb           : toggle gitgutter for current buffer
+"   leader+gs           : toggle gitgutter signs
+"   leader+gh           : toggle gitgutter line highlights
+"   ]h                  : next hunk
+"   [h                  : prev hunk
+"
+" minimap:
+"   leader+ms           : show minimap
+"   leader+mu           : update minimap
+"   leader+mc           : close minimap
+"   leader+mt           : toggle minimap
+"
+" nerdtree:
+"   F2                  : toggle nerdtree window
+"   I                   : toggle hidden files
+"   leader+n            : nerd tree focus
+" ultisnip:
+"   c-tab               : UltiSnipsExpandTrigger
+"   c-b                 : UltiSnipsJumpForwardTrigger
+"   c-z                 : UltiSnipsJumpBackwardTrigger
+" nerdcommenter:
+"   leader+cc           : comment
+"   leader+cn           : comment nested
+"   leader+c+space      : comment toggle
+"   leader+cm           : comment minimal
+"   leader+ci           : comment invert
+"   leader+cs           : comment sexy
+"   leader+cy           : yank + comment
+"   leader+c$           : comment to end of line
+"   leader+cA           : comment append to line
+"   leader+ca           : comment switch to alternate delimiters
+"   leader+cl           : comment align left
+"   leader+cu           : uncomment
+" ctrlp:
+"   c-p                 : invoke ctrlp in file find mode
+"   F5                  : purge cache, get new files, ...
+"   c-f and c-b         : cycle between modes
+"   c-d                 : switch to filename only
+"   c-r                 : switch to regex mode
+"   arrow keys          : navigate list
+"   c-t or c-v or c-x   : open in new tab or new split
+"   c-n or c-p          : select next/prev string in prompt's history
+"   c-y                 : create new file and parent dirs
+"   c-z                 : mark/unmark files
+"   c-o                 : open marked files
+"   ?                   : get more help
+"   .. or more .        : go up the dir tree
+"   <string>:cmd        : execute command on opening file
+"                         or :diffthis when opening multiple files
 
 set nocompatible
 set nomodeline
@@ -39,8 +144,6 @@ highlight ColorColumn ctermbg=darkgray
 
 " when using star (*) to search, keep the cursor in the current position:
 nnoremap <expr> * ':%s/'.expand('<cword>').'//gn<CR>``'
-
-" set path+=Inc
 
 " backup and swap files
 set backup
@@ -236,22 +339,31 @@ filetype off                   " required
 call vundle#begin()            " required
 Plugin 'VundleVim/Vundle.vim'  " required
 Plugin 'vim-scripts/a.vim'
+
 Plugin 'preservim/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'ryanoasis/vim-devicons'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+
 Plugin 'jlanzarotta/bufexplorer'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'bfrg/vim-cpp-modern'
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'Valloric/YouCompleteMe'
-" Plugin 'MarcWeber/vim-addon-mw-utils'  " needed by vim-snipmate
-" Plugin 'tomtom/tlib_vim'               " needed by vim-snipmate
-" Plugin 'garbas/vim-snipmate'
-" Plugin 'hrsh7th/vim-vsnip'
-" Plugin 'hrsh7th/vim-vsnip-integ'
-" Plugin 'rafamadriz/friendly-snippets'
+
+"Plugin 'SirVer/ultisnips'
+"Plugin 'honza/vim-snippets'
+
+"Plugin 'MarcWeber/vim-addon-mw-utils'  " needed by vim-snipmate
+"Plugin 'tomtom/tlib_vim'               " needed by vim-snipmate
+"Plugin 'garbas/vim-snipmate'
+
+"Plugin 'hrsh7th/vim-vsnip'
+"Plugin 'hrsh7th/vim-vsnip-integ'
+"Plugin 'rafamadriz/friendly-snippets'
+
 " Plugin 'pangloss/vim-javascript'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -281,7 +393,6 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'BurntSushi/ripgrep'
 Plugin 'junegunn/fzf'
 Plugin 'vim-scripts/MultipleSearch'
-Plugin 'ryanoasis/vim-devicons'
 Plugin 'google/vim-searchindex'
 Plugin 'linjiX/vim-star'
 Plugin 'preservim/vim-indent-guides'
@@ -386,8 +497,11 @@ if exists('$TMUX') && (system("tmux show-options -wg xterm-keys | cut -d' '-f2")
 endif
 
 " vim-indent-guides
-" let g:indent_guides_enable_on_vim_startup = 1
-" let g:indent_guides_start_level = 2
+" :IndentGuidesEnable
+" :IndentGuidesDisable
+" :IndentGuidesToggle
+"let g:indent_guides_enable_on_vim_startup = 1
+"let g:indent_guides_start_level = 2
 "let g:indent_guides_guide_size = 1
 
 " vim-airline
@@ -463,7 +577,7 @@ let g:NERDTreePatternMatchHighlightColor = {} " this line is needed to avoid err
 let g:NERDTreePatternMatchHighlightColor['.*_spec\.rb$'] = s:rspec_red " sets the color for files ending with _spec.rb
 let g:WebDevIconsDefaultFolderSymbolColor = s:beige " sets the color for folders that did not match any rule
 let g:WebDevIconsDefaultFileSymbolColor = s:blue " sets the color for files that did not match any rule
-"nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <leader>n :NERDTreeFocus<CR>
 "nnoremap <C-n> :NERDTree<CR>
 nnoremap <F2> :NERDTreeToggle<CR>
 "nnoremap <C-f> :NERDTreeFind<CR>
@@ -471,7 +585,21 @@ nnoremap <F2> :NERDTreeToggle<CR>
 " snipmate
 let g:snipMate = { 'snippet_version' : 1 }
 
+" ultisnips
+" see: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+" Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
+" - https://github.com/Valloric/YouCompleteMe
+" - https://github.com/nvim-lua/completion-nvim
+let g:UltiSnipsExpandTrigger="<c-tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+" If you want :UltiSnipsEdit to split your window:
+let g:UltiSnipsEditSplit="vertical"
+
+
 " NERDCommenter
+" Create default mappings
+let g:NERDCreateDefaultMappings = 1
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
 " Use compact syntax for prettified multi-line comments
@@ -533,7 +661,7 @@ elseif g:os=='linux'
 endif
 
 " python jedi
-let g:jedi#environment_path = "/usr/bin/python3.10"
+let g:jedi#environment_path = "/usr/bin/python3.13"
 "let g:jedi#environment_path = "venv"
 "let g:jedi#auto_initialization = 0   # set to 0 to disable auto init
 "let g:jedi#auto_vim_configuration = 0   # set to 0 to disable auto init
@@ -565,7 +693,7 @@ endif
 " :help ctrlp-commands and :help ctrlp-extensions
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_working_path_mode = 'rw'
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
 set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
@@ -652,22 +780,31 @@ if has('gui_running')
     set lines=60 columns=120
     " set guioptions-=T
     " set guioptions-=e
+     
     " set t_Co=256
+     
     " set guitablabel=%M\ %t
 endif
 
+ 
 " Use Unix as the standard file type
+ 
 set ffs=unix,dos,mac
 
+ 
 " Visual mode pressing * or # searches for the current selection
+ 
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+ 
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
+ 
 " Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+ 
+map <A-Down> <C-W>j
+map <A-Up> <C-W>k
+map <A-Left> <C-W>h
+map <A-Right> <C-W>l
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
@@ -686,7 +823,8 @@ map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
-map <leader>t<leader> :tabnext<cr>
+map <leader>t+ :tabnext<cr>
+map <leader>t- :tabprevious<cr>
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -741,8 +879,8 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " minimap
 let g:minimap_show='<leader>ms'
 let g:minimap_update='<leader>mu'
-let g:minimap_close='<leader>gc'
-let g:minimap_toggle='<leader>gt'
+let g:minimap_close='<leader>mc'
+let g:minimap_toggle='<leader>mt'
 let g:minimap_highlight='Visual'
 
 " JSON beautifier
@@ -762,9 +900,16 @@ nmap <leader>jq :%!jq<CR>
 " let g:ale_lint_on_enter = 0
 " let g:ale_virtualtext_cursor = 'disabled'
 
-" git gutter
+" gitgutter
 let g:gitgutter_enabled=0
-nnoremap <silent> <leader>d :GitGutterToggle<cr>
+nnoremap <silent> <leader>gt :GitGutterToggle<cr>
+nnoremap <silent> <leader>gb :GitGutterBufferToggle<cr>
+nnoremap <silent> <leader>gs :GitGutterSignsToggle<cr>
+nnoremap <silent> <leader>gh :GitGutterLineHighlightsToggle<cr>
+nmap ]h <Plug>(GitGutterNextHunk)
+nmap [h <Plug>(GitGutterPrevHunk)
+"let g:gitgutter_show_msg_on_hunk_jumping = 0
+let g:gitgutter_preview_win_floating = 1
 
 " fugitive
 " Copy the link to the line of a Git repository to the clipboard
@@ -810,28 +955,28 @@ map <F5> :call CompileRun()<CR>
 imap <F5> <Esc>:call CompileRun()<CR>
 vmap <F5> <Esc>:call CompileRun()<CR>
 func! CompileRun()
-exec "w"
-if &filetype == 'c'
-    exec "!gcc % -o %<"
-    exec "!time ./%<"
-elseif &filetype == 'cpp'
-    exec "!g++ % -o %<"
-    exec "!time ./%<"
-elseif &filetype == 'java'
-    exec "!javac %"
-    exec "!time java %"
-elseif &filetype == 'sh'
-    exec "!time bash %"
-elseif &filetype == 'python'
-    exec "!time python3 %"
-elseif &filetype == 'html'
-    exec "!google-chrome % &"
-elseif &filetype == 'go'
-    exec "!go build %<"
-    exec "!time go run %"
-elseif &filetype == 'matlab'
-    exec "!time octave %"
-endif
+    exec "w"
+    if &filetype == 'c'
+        exec "!gcc % -o %<"
+        exec "!time ./%<"
+    elseif &filetype == 'cpp'
+        exec "!g++ % -o %<"
+        exec "!time ./%<"
+    elseif &filetype == 'java'
+        exec "!javac %"
+        exec "!time java %"
+    elseif &filetype == 'sh'
+        exec "!time bash %"
+    elseif &filetype == 'python'
+        exec "!time python3 %"
+    elseif &filetype == 'html'
+        exec "!google-chrome % &"
+    elseif &filetype == 'go'
+        exec "!go build %<"
+        exec "!time go run %"
+    elseif &filetype == 'matlab'
+        exec "!time octave %"
+    endif
 endfunc
 
 " pydoc
