@@ -1,3 +1,4 @@
+"
 " useful commands:
 "   HEX edit:                     %!xxd
 "   source buffer as vim script:  so %
@@ -73,6 +74,7 @@
 "   F2                  : toggle nerdtree window
 "   I                   : toggle hidden files
 "   leader+n            : nerd tree focus
+"   r                   : refresh
 " ultisnip:
 "   c-tab               : UltiSnipsExpandTrigger
 "   c-b                 : UltiSnipsJumpForwardTrigger
@@ -116,6 +118,7 @@ let maplocalleader="\\"
 set langmenu=en_US
 let $LANG='en_US'
 set encoding=utf8
+" set encoding=latin1
 set guifont=Hack\ Nerd\ Font\ 18
 set nobomb  " don't clutter files with unicode BOMs
 set hidden
@@ -985,14 +988,6 @@ nnoremap <buffer> H :<C-u>execute "!pydoc3 " . expand("<cword>")<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Returns true if paste mode is enabled
-function! HasPaste()
-    if &paste
-        return 'PASTE MODE  '
-    endif
-    return ''
-endfunction
-
 " Don't close window, when deleting a buffer
 command! Bclose call <SID>BufcloseCloseIt()
 function! <SID>BufcloseCloseIt()

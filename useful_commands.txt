@@ -212,4 +212,6 @@ WESP breakout board:
         ro: 0x08000000        ER_RO.bin
         Make sure to flash both smcus!
     Flash .axf file with ozone and debug
-
+gdb server: in separate terminals, run these commands:
+    JLinkGDBServerExe
+    /opt/gcc-arm-none-eabi-8-2018-q4-major/bin/arm-none-eabi-gdb ./conan_package/bin/SafetyMCU.axf --eval-command="target remote localhost:2331"

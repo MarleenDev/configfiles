@@ -56,8 +56,8 @@ alias grm='git reset ../../modules/matsdk ../../scripts/python/autobuild.cfg ../
 alias gst='git status --ignore-submodules'
 alias gd='git diff'
 alias gds='git diff --staged'
-alias vimupdate='cd /home/marleenvos/dev/repos/mvos/vim; git pull origin master ; make ; sudo make install ; vim --version'
-alias nvimupdate='cd /home/marleenvos/dev/repos/mvos/neovim; git pull origin master ; make CMAKE_BUILD_TYPE=RelWithDebInf ; sudo make install ; nvim -V1 -v'
+alias vimupdate='cd /home/marleenvos/dev/repos/mvos/vim; git pull origin master ; git fetch -a ; . ./configure.bash ; make ; sudo make install ; vim --version'
+alias nvimupdate='cd /home/marleenvos/dev/repos/mvos/neovim; git pull origin master ; git fetch -a ; make CMAKE_BUILD_TYPE=RelWithDebInf ; sudo make install ; nvim -V1 -v'
 alias lt='ls -alrt'
 alias maketags="ctags --map-C++=+'(*.ino)' -R ."
 alias dfind='find . -type d'
