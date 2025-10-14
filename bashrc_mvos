@@ -4,6 +4,7 @@
 
 ulimit -c unlimited
 export CORE=/var/lib/systemd/coredump
+export EDITOR=vim
 
 # fortrobotics
 export CONAN_REVISIONS_ENABLED=1
