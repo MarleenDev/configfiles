@@ -1,0 +1,32 @@
+[copied from https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html]
+
+This is what your files should look like when you start if your project
+is creatively called project, with a library called lib, and a executable
+called app:
+
+- project
+  - .gitignore
+  - README.md
+  - LICENSE.md
+  - CMakeLists.txt
+  - cmake
+    - FindSomeLib.cmake
+    - something_else.cmake
+  - include
+    - project
+      - lib.hpp
+  - src
+    - CMakeLists.txt
+    - lib.cpp
+  - apps
+    - CMakeLists.txt
+    - app.cpp
+  - tests
+    - CMakeLists.txt
+    - testlib.cpp
+  - docs
+    - CMakeLists.txt
+  - extern
+    - googletest
+  - scripts
+    - helper.py
