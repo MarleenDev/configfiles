@@ -22,8 +22,8 @@ export LD_LIBRARY_PATH="/home/marleenvos/go/deps/raft/.libs/:/home/marleenvos/go
 export CGO_LDFLAGS_ALLOW="(-Wl,-wrap,pthread_create)|(-Wl,-z,now)"
 
 # /usr/local first:
-#export PATH=/usr/local/bin:/opt/homebrew/bin:$PATH:/home/marleenvos/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
-#export LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
+export PATH=/usr/local/bin:/opt/homebrew/bin:$PATH:/home/marleenvos/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
 
 export PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ '
 export LC_ALL="en_US.UTF-8"
@@ -57,8 +57,23 @@ alias grm='git reset ../../modules/matsdk ../../scripts/python/autobuild.cfg ../
 alias gst='git status --ignore-submodules'
 alias gd='git diff'
 alias gds='git diff --staged'
-alias vimupdate='cd /home/marleenvos/dev/repos/mvos/vim; git pull origin master ; git fetch -a ; . ./configure.bash ; make ; sudo make install ; vim --version'
-alias nvimupdate='cd /home/marleenvos/dev/repos/mvos/neovim; git pull origin master ; git fetch -a ; make CMAKE_BUILD_TYPE=RelWithDebInf ; sudo make install ; nvim -V1 -v'
+alias vimupdate='cd /home/marleenvos/dev/repos/mvos/vim; \
+    old=$(git rev-parse HEAD); \
+    git fetch origin master >/dev/null 2>&1; \
+    [ "$old" = "$(git rev-parse origin/master)" ] && echo "No updates." || \
+    { echo "Repo updated."; \
+        git merge origin/master; \
+        git fetch -a; \
+        . ./configure.bash; \
+        make; \
+        sudo make install; \
+        vim --version; }'
+alias nvimupdate='cd /home/marleenvos/dev/repos/mvos/neovim; \
+    git pull origin master; \
+    git fetch -a; \
+    make CMAKE_BUILD_TYPE=RelWithDebInf; \
+    sudo make install; \
+    nvim -V1 -v'
 alias lt='ls -alrt'
 alias maketags="ctags --map-C++=+'(*.ino)' -R ."
 alias dfind='find . -type d'
